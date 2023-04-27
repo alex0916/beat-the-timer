@@ -33,7 +33,7 @@ export const RoomScores = () => {
 		return <Loading />;
 	}
 
-	if (error || !scores) {
+	if (error) {
 		return <Error />;
 	}
 

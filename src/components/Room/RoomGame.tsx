@@ -15,7 +15,7 @@ export const RoomGame = () => {
 		scoreError,
 	} = useGetRoomGame();
 
-	if (error || scoreError) {
+	if (error) {
 		return <Error />;
 	}
 
