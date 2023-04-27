@@ -4,6 +4,7 @@ import { useMutation } from 'react-query';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
+import { InputSwitch } from 'primereact/inputswitch';
 
 import { CreateRoomHelper } from '@src/lib';
 import { useActionHelper } from '@src/hooks';
@@ -11,6 +12,7 @@ import { useActionHelper } from '@src/hooks';
 type Inputs = {
 	gameRounds: number;
 	ownerName: string;
+	isMultiplayer: boolean;
 };
 
 export const CreateRoom = () => {
@@ -22,7 +24,11 @@ export const CreateRoom = () => {
 			return await createRoomHelper.initializeRoom(input);
 		},
 		onSuccess(data) {
-			router.push(`room/${data.roomId}/player/${data.playerId}`);
+			if (data.isMultiplayer) {
+				router.push(`room/${data.roomId}/player/${data.playerId}`);
+			} else {
+				router.push(`room/${data.roomId}/player/${data.playerId}/game`);
+			}
 		},
 	});
 
@@ -30,12 +36,16 @@ export const CreateRoom = () => {
 		control,
 		handleSubmit,
 		formState: { errors },
+		watch,
 	} = useForm<Inputs>({
 		defaultValues: {
 			gameRounds: 3,
 			ownerName: '',
+			isMultiplayer: true,
 		},
 	});
+
+	const [isMultiplayer] = watch(['isMultiplayer']);
 
 	return (
 		<form className="grid" onSubmit={handleSubmit((input) => mutate(input))}>
@@ -87,11 +97,26 @@ export const CreateRoom = () => {
 							</div>
 						)}
 					/>
+					<Controller
+						name="isMultiplayer"
+						control={control}
+						render={({ field }) => (
+							<div className="col-12 md:col-6 flex flex-column gap-2">
+								<label htmlFor={field.name}>Multiplayer</label>
+								<InputSwitch
+									inputId={field.name}
+									checked={field.value}
+									inputRef={field.ref}
+									onChange={(e) => field.onChange(e.value)}
+								/>
+							</div>
+						)}
+					/>
 				</div>
 				<Button
 					loading={isLoading}
 					className="my-4 w-full"
-					label="Create Room"
+					label={isMultiplayer ? 'Create Room' : 'Start Game'}
 					type="submit"
 					size="large"
 				/>

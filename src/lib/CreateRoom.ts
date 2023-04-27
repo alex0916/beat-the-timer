@@ -1,9 +1,11 @@
 import { getRandomNumber } from '@src/utils';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { StartGameHelper } from './StartGame';
 
 type CreateRoomInput = {
 	gameRounds: number;
 	ownerName: string;
+	isMultiplayer: boolean;
 };
 
 export class CreateRoomHelper {
@@ -56,10 +58,18 @@ export class CreateRoomHelper {
 		this.ownerId = data?.id;
 	}
 
+	private async startSinglePlayerRoom() {
+		await StartGameHelper.fromClient(this.supabase).startGame({ roomId: String(this.roomId) });
+	}
+
 	async initializeRoom(input: CreateRoomInput) {
 		this.input = input;
 		await this.createRoom();
 		await Promise.all([this.loadRoomGames(), this.createRoomOwner()]);
-		return { roomId: this.roomId, playerId: this.ownerId };
+		if (!this.input.isMultiplayer) {
+			await this.startSinglePlayerRoom();
+		}
+
+		return { roomId: this.roomId, playerId: this.ownerId, isMultiplayer: this.input.isMultiplayer };
 	}
 }

@@ -12,7 +12,7 @@ export class StartGameHelper {
 		this.supabase = supabase;
 	}
 
-	static fromInput(supabase: SupabaseClient) {
+	static fromClient(supabase: SupabaseClient) {
 		return new StartGameHelper(supabase);
 	}
 
