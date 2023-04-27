@@ -53,6 +53,7 @@ export const RoomOwner = () => {
 
 			<div className="col-12 pt-4">
 				<Button
+					size="large"
 					loading={isLoading}
 					className="w-full"
 					onClick={() => mutate()}
