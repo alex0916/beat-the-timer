@@ -38,11 +38,11 @@ export const RoomContextProvider = ({ children }: PropsWithChildren) => {
 			return;
 		}
 
-		if (room.status === RoomStatus.STARTED) {
+		if (room.status === RoomStatus.STARTED && !router.pathname.includes('game')) {
 			router.push(`/room/${query.roomId}/player/${query.playerId}/game`);
 		}
 
-		if (room.status === RoomStatus.FINISHED) {
+		if (room.status === RoomStatus.FINISHED && !router.pathname.includes('scores')) {
 			router.push(`/room/${query.roomId}/scores`);
 		}
 
