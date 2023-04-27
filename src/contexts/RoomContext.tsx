@@ -3,11 +3,11 @@ import React, { createContext, PropsWithChildren, useContext, useEffect, useStat
 import { useQuery } from 'react-query';
 
 import { useRoomHelper } from '@src/hooks';
-import { type Room } from '@src/types';
+import { RoomStatus, type Room } from '@src/types';
 
 export type RoomContextState = {
 	room: Room | undefined;
-	error: any;
+	error: unknown;
 	isLoading: boolean;
 	isIdle: boolean;
 };
@@ -38,11 +38,11 @@ export const RoomContextProvider = ({ children }: PropsWithChildren) => {
 			return;
 		}
 
-		if (room.status === 2) {
+		if (room.status === RoomStatus.STARTED) {
 			router.push(`/room/${query.roomId}/player/${query.playerId}/game`);
 		}
 
-		if (room.rounds === room.roundsPlayed) {
+		if (room.status === RoomStatus.FINISHED) {
 			router.push(`/room/${query.roomId}/scores`);
 		}
 

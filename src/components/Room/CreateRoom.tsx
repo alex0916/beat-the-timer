@@ -45,7 +45,11 @@ export const CreateRoom = () => {
 					<Controller
 						name="ownerName"
 						control={control}
-						rules={{ required: 'Room name is required.' }}
+						rules={{
+							required: 'Player name is required.',
+							minLength: { value: 2, message: 'Invalid name' },
+							maxLength: { value: 15, message: 'Too long' },
+						}}
 						render={({ field }) => (
 							<div className="col-12 md:col-6 flex flex-column gap-2">
 								<label htmlFor="player-name">Player name</label>
@@ -56,7 +60,7 @@ export const CreateRoom = () => {
 									onChange={(e) => field.onChange(e.target.value)}
 								/>
 								{errors.ownerName ? (
-									<small className="text-red-500">Enter valid player name</small>
+									<small className="text-red-500">{errors.ownerName.message}</small>
 								) : null}
 							</div>
 						)}
@@ -64,7 +68,11 @@ export const CreateRoom = () => {
 					<Controller
 						name="gameRounds"
 						control={control}
-						rules={{ required: 'Room name is required.' }}
+						rules={{
+							required: 'Rounds is required.',
+							min: { value: 1, message: "Cant't be 0" },
+							max: { value: 8, message: "Can't be more than 8 rounds" },
+						}}
 						render={({ field }) => (
 							<div className="col-12 md:col-6 flex flex-column gap-2">
 								<label htmlFor="rounds">Rounds</label>
@@ -74,13 +82,19 @@ export const CreateRoom = () => {
 									inputStyle={{ width: '-webkit-fill-available' }}
 								/>
 								{errors.gameRounds ? (
-									<small className="text-red-500">Enter valid number of rounds</small>
+									<small className="text-red-500">{errors.gameRounds.message}</small>
 								) : null}
 							</div>
 						)}
 					/>
 				</div>
-				<Button loading={isLoading} className="my-4 w-full" label="Create Room" type="submit" />
+				<Button
+					loading={isLoading}
+					className="my-4 w-full"
+					label="Create Room"
+					type="submit"
+					size="large"
+				/>
 			</div>
 		</form>
 	);

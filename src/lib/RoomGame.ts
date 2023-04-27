@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { type RoomGame, UpdateSubscriptionPayload } from '@src/types';
+import { type RoomGame, UpdateSubscriptionPayload, RoomGameStatus } from '@src/types';
 
 export class RoomGameHelper {
 	private supabase: SupabaseClient;
@@ -22,7 +22,7 @@ export class RoomGameHelper {
 			.select(
 				'id, status, flippedItems:flipped_items, scores:room_scores(id, playerId: player_id, score)'
 			)
-			.eq('status', 1)
+			.eq('status', RoomGameStatus.CREATED)
 			.eq('room_id', this.roomId)
 			.limit(1)
 			.single()

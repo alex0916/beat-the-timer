@@ -66,6 +66,7 @@ export const useGetRoomGame = () => {
 		data: roomGame,
 		error: error,
 		handleScore: scoreMutation.mutate,
+		scoreError: scoreMutation.error,
 		isScoreLoading: scoreMutation.isLoading,
 		isReadyForNextGame: isReadyForNextGame || scoreMutation.isSuccess,
 	};

@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button } from 'primereact/button';
-import { getRandomNumber } from '@src/utils';
+import { Divider } from 'primereact/divider';
+
+import { useRoomContext } from '@src/contexts';
+import { useCounter } from '@src/hooks';
 
 const GRID_SIZE = 24;
 
@@ -9,44 +12,50 @@ type BeatTimerProps = {
 	handleScore: (score: number) => void;
 };
 
-// @TODO improve
 const getFlippedIndexes = (flippedItems: number) =>
-	new Set(
-		[...Array(GRID_SIZE).keys()].map(() => getRandomNumber(GRID_SIZE)).slice(0, flippedItems)
-	);
+	[...Array(GRID_SIZE).keys()]
+		.map((value) => ({ value, sort: Math.random() }))
+		.sort((a, b) => a.sort - b.sort)
+		.map(({ value }) => value)
+		.slice(0, flippedItems);
 
 export const BeatTimer = ({ flippedItems = 1, handleScore }: BeatTimerProps) => {
-	const [flippedIndexes, setFlippedIndexes] = useState<Set<number>>(new Set([]));
-	const [selectedIndexes, setSelectedIndexes] = useState<Set<number>>(new Set([]));
+	const { room } = useRoomContext();
+	const counter = useCounter(5);
+	const [flippedIndexes, setFlippedIndexes] = useState<number[]>([]);
+	const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
 
 	useEffect(() => {
-		setFlippedIndexes(getFlippedIndexes(flippedItems));
-	}, [flippedItems]);
-
-	useEffect(() => {
-		if (selectedIndexes.size === flippedItems) {
-			handleScore(10);
+		if (flippedIndexes.length === 0) {
+			setFlippedIndexes(getFlippedIndexes(flippedItems));
 		}
-	}, [selectedIndexes]);
+		if (selectedIndexes.length === flippedItems || counter === 0) {
+			handleScore(selectedIndexes.length);
+		}
+	}, [flippedItems, selectedIndexes, counter]);
 
 	const handleSelection = (selectedItem: number) => {
-		if (flippedIndexes.has(selectedItem)) {
-			setSelectedIndexes((prevSelected) => new Set([...prevSelected, selectedItem]));
+		if (flippedIndexes.includes(selectedItem)) {
+			setSelectedIndexes((prevSelected) => [...prevSelected, selectedItem]);
 		}
 	};
 
-	console.log({ flippedIndexes, flippedItems });
-
 	return (
-		<div className="grid pt-5">
+		<div className="grid">
+			<div className="col-12 flex justify-content-between">
+				<p className="font-bold text-xl">👤 {room?.player?.name}</p>
+				<p className="font-bold text-xl">{counter} ⌛</p>
+			</div>
+			<Divider className="mt-1" />
 			<div className="grid">
 				{[...Array(GRID_SIZE).keys()].map((_value, idx) => (
 					<div className="col-2" key={`item-${idx}`}>
 						<Button
 							text
+							rounded
 							className={`w-full flex justify-content-center text-2xl ${
-								flippedIndexes.has(idx) ? 'rotate-180' : ''
-							} ${selectedIndexes.has(idx) ? 'bg-green-500' : ''}`}
+								flippedIndexes.includes(idx) ? 'rotate-180' : ''
+							} ${selectedIndexes.includes(idx) ? 'bg-green-500' : ''}`}
 							size="large"
 							onClick={() => handleSelection(idx)}
 						>

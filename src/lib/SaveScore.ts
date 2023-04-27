@@ -1,3 +1,4 @@
+import { RoomGameStatus, RoomStatus } from '@src/types';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 type SaveScoreInput = {
@@ -14,9 +15,6 @@ type RoomGame = {
 		rounds: number;
 		roundsPlayed: number;
 	};
-	scores: {
-		playerId: string;
-	}[];
 };
 
 export class SaveScoreHelper {
@@ -31,10 +29,8 @@ export class SaveScoreHelper {
 	private async getRoomGame() {
 		const { data } = await this.supabase
 			.from('room_games')
-			.select(
-				'id, room:rooms ( id, participants, roundsPlayed:rounds_played ), scores:room_scores ( playerId:player_id )'
-			)
-			.eq('status', 1)
+			.select('id, room:rooms ( id, participants, rounds, roundsPlayed:rounds_played )')
+			.eq('status', RoomGameStatus.CREATED)
 			.eq('id', this.input.roomGameId)
 			.single()
 			.throwOnError();
@@ -42,16 +38,8 @@ export class SaveScoreHelper {
 		this.roomGame = data as RoomGame;
 	}
 
-	private validateScore() {
-		if (this.roomGame.scores.findIndex((score) => score.playerId === this.input.playerId) !== -1) {
-			throw new Error('User already played');
-		}
-	}
-
 	private async addScore() {
-		this.validateScore();
-
-		const { data } = await this.supabase
+		await this.supabase
 			.from('room_scores')
 			.insert({
 				room_game_id: this.input.roomGameId,
@@ -62,19 +50,17 @@ export class SaveScoreHelper {
 			.select('playerId: player_id')
 			.single()
 			.throwOnError();
-
-		this.roomGame.scores = [
-			...this.roomGame.scores,
-			data as {
-				playerId: string;
-			},
-		];
 	}
 
 	private async updateRoundsPlayed() {
+		const roundsPlayed = this.roomGame.room.roundsPlayed + 1;
+
 		await this.supabase
 			.from('rooms')
-			.update({ rounds_played: this.roomGame.room.roundsPlayed + 1 })
+			.update({
+				rounds_played: roundsPlayed,
+				...(roundsPlayed === this.roomGame.room.rounds && { status: RoomStatus.FINISHED }),
+			})
 			.eq('id', this.roomGame.room.id)
 			.throwOnError();
 	}
@@ -82,17 +68,27 @@ export class SaveScoreHelper {
 	private async updateRoomGameStatus() {
 		await this.supabase
 			.from('room_games')
-			.update({ status: 2 })
+			.update({ status: RoomGameStatus.FINISHED })
 			.eq('id', this.input.roomGameId)
 			.throwOnError();
+	}
+
+	private async checkRoomGameUpdate() {
+		const { data: scores } = await this.supabase
+			.from('room_scores')
+			.select()
+			.eq('room_game_id', this.roomGame.id)
+			.throwOnError();
+
+		if (this.roomGame.room.participants === scores?.length) {
+			await Promise.all([this.updateRoundsPlayed(), this.updateRoomGameStatus()]);
+		}
 	}
 
 	async saveScore(input: SaveScoreInput) {
 		this.input = input;
 		await this.getRoomGame();
 		await this.addScore();
-		if (this.roomGame.room.participants === this.roomGame.scores.length) {
-			await Promise.all([this.updateRoundsPlayed(), this.updateRoomGameStatus()]);
-		}
+		await this.checkRoomGameUpdate();
 	}
 }

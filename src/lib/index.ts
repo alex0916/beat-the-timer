@@ -5,3 +5,4 @@ export * from './CreateRoom';
 export * from './JoinRoom';
 export * from './StartGame';
 export * from './SaveScore';
+export * from './Scores';

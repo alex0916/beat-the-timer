@@ -6,6 +6,17 @@ import {
 export type UpdateSubscriptionPayload = RealtimePostgresUpdatePayload<{ [key: string]: any }>;
 export type InsertSubscriptionPayload = RealtimePostgresInsertPayload<{ [key: string]: any }>;
 
+export enum RoomStatus {
+	CREATED = 1,
+	STARTED,
+	FINISHED,
+}
+
+export enum RoomGameStatus {
+	CREATED = 1,
+	FINISHED,
+}
+
 export type Room = {
 	id: string;
 	name: string;

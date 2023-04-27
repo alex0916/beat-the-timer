@@ -36,17 +36,20 @@ export const JoinRoom = () => {
 		},
 	});
 
-	// @TODO handle mutate error
 	return (
 		<div className="grid">
 			<div className="col-12">
-				<h1 className="text-center">Enter your username and join the room 🎲</h1>
+				<h1 className="text-center">Enter your name and join the room 🎲</h1>
 			</div>
 			<form className="flex-1 flex-column" onSubmit={handleSubmit((input) => mutate(input))}>
 				<Controller
 					name="playerName"
 					control={control}
-					rules={{ required: 'Name is required.' }}
+					rules={{
+						required: 'Player name is required.',
+						minLength: { value: 2, message: 'Invalid name' },
+						maxLength: { value: 15, message: 'Too long' },
+					}}
 					render={({ field }) => (
 						<div className="flex flex-column gap-2 mb-4">
 							<label htmlFor="player-name">Player name</label>
@@ -56,11 +59,19 @@ export const JoinRoom = () => {
 								value={field.value}
 								onChange={(e) => field.onChange(e.target.value)}
 							/>
-							{errors.playerName ? <small>Enter valid player name</small> : null}
+							{errors.playerName ? (
+								<small className="text-red-500">{errors.playerName.message}</small>
+							) : null}
 						</div>
 					)}
 				/>
-				<Button loading={isLoading} className="w-full" type="submit" label="Join Room" />
+				<Button
+					loading={isLoading}
+					className="w-full"
+					type="submit"
+					label="Join Room"
+					size="large"
+				/>
 			</form>
 		</div>
 	);

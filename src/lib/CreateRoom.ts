@@ -11,7 +11,7 @@ export class CreateRoomHelper {
 	private input!: CreateRoomInput;
 	private roomId?: string;
 	private ownerId?: string;
-	private static MAX_FLIPPED_ITEMS = 5;
+	private static MAX_FLIPPED_ITEMS = 6;
 
 	constructor(supabase: SupabaseClient) {
 		this.supabase = supabase;
@@ -35,7 +35,7 @@ export class CreateRoomHelper {
 				[...Array(this.input.gameRounds).keys()].map(() => ({
 					room_id: this.roomId,
 					status: 1,
-					flipped_items: getRandomNumber(CreateRoomHelper.MAX_FLIPPED_ITEMS),
+					flipped_items: getRandomNumber(CreateRoomHelper.MAX_FLIPPED_ITEMS, 2),
 				}))
 			)
 			.throwOnError();

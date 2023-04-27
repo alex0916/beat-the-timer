@@ -1,6 +1,7 @@
 import { useGetRoomGame } from '@src/hooks';
-import { Loading } from '../Loading';
-import { BeatTimer } from '../Games';
+import { Loading } from '@src/components/Loading';
+import { BeatTimer } from '@src/components/Games';
+import { Error } from '@src/components/Error';
 
 export const RoomGame = () => {
 	const {
@@ -11,22 +12,19 @@ export const RoomGame = () => {
 		isScoreLoading,
 		isReadyForNextGame,
 		handleScore,
+		scoreError,
 	} = useGetRoomGame();
 
-	if (error) {
-		return <>Error!</>;
+	if (error || scoreError) {
+		return <Error />;
 	}
 
 	if (isLoading || isIdle) {
 		return <Loading />;
 	}
 
-	if (isScoreLoading) {
+	if (isScoreLoading || isReadyForNextGame) {
 		return <Loading />;
-	}
-
-	if (isReadyForNextGame) {
-		return <>Score Saved, wait for the others</>;
 	}
 
 	return <BeatTimer flippedItems={roomGame?.flippedItems} handleScore={handleScore} />;
