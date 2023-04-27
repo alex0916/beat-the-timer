@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { type RoomPlayer } from '@src/types';
+import { type InsertSubscriptionPayload, type RoomPlayer } from '@src/types';
 
 export class RoomPlayersHelper {
 	private supabase: SupabaseClient;
@@ -22,5 +22,21 @@ export class RoomPlayersHelper {
 			.throwOnError();
 
 		return data as RoomPlayer[];
+	}
+
+	getNewPlayerSubscription(callback: (payload: InsertSubscriptionPayload) => void) {
+		return this.supabase
+			.channel('new-game')
+			.on(
+				'postgres_changes',
+				{
+					event: 'INSERT',
+					schema: 'public',
+					table: 'room_players',
+					filter: `room_id=eq.${this.roomId}`,
+				},
+				callback
+			)
+			.subscribe();
 	}
 }
