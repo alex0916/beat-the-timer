@@ -29,7 +29,7 @@ export const BeatTimer = ({ flippedItems = 1, handleScore }: BeatTimerProps) => 
 		if (flippedIndexes.length === 0) {
 			setFlippedIndexes(getFlippedIndexes(flippedItems));
 		}
-		if (selectedIndexes.length === flippedItems || counter === 0) {
+		if (counter === 0) {
 			handleScore(selectedIndexes.length);
 		}
 	}, [flippedItems, selectedIndexes, counter]);
@@ -44,7 +44,7 @@ export const BeatTimer = ({ flippedItems = 1, handleScore }: BeatTimerProps) => 
 		<div className="grid">
 			<div className="col-12 flex justify-content-between">
 				<p className="font-bold text-xl">👤 {room?.player?.name}</p>
-				<p className="font-bold text-xl">{counter} ⌛</p>
+				<p className="font-bold text-xl">{counter} ⏳</p>
 			</div>
 			<Divider className="mt-1" />
 			<div className="grid">

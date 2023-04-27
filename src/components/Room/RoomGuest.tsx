@@ -13,7 +13,7 @@ export const RoomGuest = () => {
 	return (
 		<div className="grid">
 			<div className="col-12">
-				<h1 className="text-center">Wait until the room owner starts the game... 🎲</h1>
+				<h1 className="text-center">Wait until the room host starts the game... 🎲</h1>
 			</div>
 
 			{isLoading ? (
