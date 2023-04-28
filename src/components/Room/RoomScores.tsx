@@ -15,6 +15,7 @@ export const RoomScores = () => {
 
 	const {
 		isLoading,
+		isIdle,
 		error,
 		data: scores,
 	} = useQuery(
@@ -29,8 +30,8 @@ export const RoomScores = () => {
 		router.push('/');
 	};
 
-	if (isLoading) {
-		return <Loading />;
+	if (isLoading || isIdle) {
+		return <Loading message="Loading Scores" />;
 	}
 
 	if (error) {

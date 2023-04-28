@@ -12,7 +12,7 @@ export const useGetRoomGame = () => {
 	const roomGameHelper = useRoomGameHelper();
 	const [roomGame, setRoomGame] = useState<RoomGame>();
 
-	const { isLoading, isIdle, error, refetch } = useQuery(
+	const { isLoading, isRefetching, isIdle, error, refetch } = useQuery(
 		['room-game'],
 		async () => {
 			return await roomGameHelper.getGame();
@@ -62,6 +62,7 @@ export const useGetRoomGame = () => {
 
 	return {
 		isLoading,
+		isRefetching,
 		isIdle,
 		data: roomGame,
 		error: error,

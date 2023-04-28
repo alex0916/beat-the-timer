@@ -8,7 +8,7 @@ export const RoomHandler = ({ children }: PropsWithChildren) => {
 	const { isIdle, isLoading, error } = useRoomContext();
 
 	if (isLoading || isIdle) {
-		return <Loading />;
+		return <Loading message="Loading Room" />;
 	}
 
 	if (error) {

@@ -21,7 +21,7 @@ const getFlippedIndexes = (flippedItems: number) =>
 
 export const BeatTimer = ({ flippedItems = 1, handleScore }: BeatTimerProps) => {
 	const { room } = useRoomContext();
-	const counter = useCounter(5);
+	const counter = useCounter(3);
 	const [flippedIndexes, setFlippedIndexes] = useState<number[]>([]);
 	const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
 

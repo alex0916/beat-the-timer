@@ -8,6 +8,7 @@ export const RoomGame = () => {
 		error,
 		isLoading,
 		isIdle,
+		isRefetching,
 		data: roomGame,
 		isScoreLoading,
 		isReadyForNextGame,
@@ -15,16 +16,16 @@ export const RoomGame = () => {
 		scoreError,
 	} = useGetRoomGame();
 
-	if (error) {
+	if (error || scoreError) {
 		return <Error />;
 	}
 
-	if (isLoading || isIdle) {
-		return <Loading />;
+	if ([isLoading, isIdle, isRefetching].some(val => val)) {
+		return <Loading message="Loading Game" />;
 	}
 
 	if (isScoreLoading || isReadyForNextGame) {
-		return <Loading />;
+		return <Loading message="Saving Score" />;
 	}
 
 	return <BeatTimer flippedItems={roomGame?.flippedItems} handleScore={handleScore} />;
