@@ -20,6 +20,25 @@ export const RoomContextProvider = ({ children }: PropsWithChildren) => {
 	const roomHelper = useRoomHelper();
 	const [room, setRoom] = useState<Room>();
 
+	const handleSetRoom = (newRoom: Partial<Room>) => {
+		let redirectPath = null;
+		if (newRoom.status === RoomStatus.STARTED && !router.pathname.includes('game')) {
+			redirectPath = `/room/${query.roomId}/player/${query.playerId}/game`;
+		}
+
+		if (newRoom.status === RoomStatus.FINISHED && !router.pathname.includes('scores')) {
+			redirectPath = `/room/${query.roomId}/scores`;
+		}
+
+		if (redirectPath) {
+			router.push(redirectPath).then(() => {
+				setRoom((prevRoom) => ({ ...prevRoom, ...newRoom } as Room));
+			});
+		} else {
+			setRoom((prevRoom) => ({ ...prevRoom, ...newRoom } as Room));
+		}
+	};
+
 	const { isLoading, isIdle, error } = useQuery(
 		['room', roomHelper?.query],
 		async () => {
@@ -28,33 +47,25 @@ export const RoomContextProvider = ({ children }: PropsWithChildren) => {
 		{
 			enabled: !!roomHelper,
 			onSuccess(data) {
-				setRoom(data);
+				handleSetRoom(data);
 			},
 		}
 	);
 
 	useEffect(() => {
-		if (!room) {
+		if (!roomHelper) {
 			return;
-		}
-
-		if (room.status === RoomStatus.STARTED && !router.pathname.includes('game')) {
-			router.push(`/room/${query.roomId}/player/${query.playerId}/game`);
-		}
-
-		if (room.status === RoomStatus.FINISHED && !router.pathname.includes('scores')) {
-			router.push(`/room/${query.roomId}/scores`);
 		}
 
 		const roomUpdateSubscription = roomHelper.getUpdateSubscription((payload) => {
 			const { rounds, rounds_played: roundsPlayed, status } = payload.new;
-			setRoom((prevRoom) => ({ ...prevRoom, rounds, roundsPlayed, status } as Room));
+			handleSetRoom({ rounds, roundsPlayed, status });
 		});
 
 		return () => {
 			roomUpdateSubscription.unsubscribe();
 		};
-	}, [room]);
+	}, [roomHelper]);
 
 	return (
 		<RoomContext.Provider value={{ room, error, isLoading, isIdle }}>

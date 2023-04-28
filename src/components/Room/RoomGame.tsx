@@ -10,23 +10,26 @@ export const RoomGame = () => {
 		isIdle,
 		isRefetching,
 		data: roomGame,
-		isScoreLoading,
-		isReadyForNextGame,
-		handleScore,
-		scoreError,
+		scoreMutation,
+		isLastRound,
 	} = useGetRoomGame();
 
-	if (error || scoreError) {
+	if (error || scoreMutation.error) {
 		return <Error />;
 	}
 
-	if ([isLoading, isIdle, isRefetching].some(val => val)) {
-		return <Loading message="Loading Game" />;
+	if ([isLoading, isIdle, isRefetching].some((val) => val)) {
+		return <Loading message="Loading game" />;
 	}
 
-	if (isScoreLoading || isReadyForNextGame) {
-		return <Loading message="Saving Score" />;
+	if (scoreMutation.isLoading) {
+		return <Loading message="Saving score" />;
 	}
 
-	return <BeatTimer flippedItems={roomGame?.flippedItems} handleScore={handleScore} />;
+	if (scoreMutation.isSuccess) {
+		const messsage = `Score saved, wait for the ${isLastRound ? 'results' : 'next game'}`;
+		return <Loading message={messsage} />;
+	}
+
+	return <BeatTimer flippedItems={roomGame?.flippedItems} handleScore={scoreMutation.mutate} />;
 };

@@ -5,14 +5,14 @@ import { Loading } from '@src/components/Loading';
 import { Error } from '@src/components/Error';
 
 export const RoomHandler = ({ children }: PropsWithChildren) => {
-	const { isIdle, isLoading, error } = useRoomContext();
-
-	if (isLoading || isIdle) {
-		return <Loading message="Loading Room" />;
-	}
+	const { isIdle, isLoading, error, room } = useRoomContext();
 
 	if (error) {
 		return <Error />;
+	}
+
+	if ([isLoading, isIdle, !room].some((val) => val)) {
+		return <Loading message="Loading room" />;
 	}
 
 	return <>{children}</>;

@@ -1,27 +1,29 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import { useMutation, useQuery } from 'react-query';
 
 import { useRoomContext } from '@src/contexts';
 import { SaveScoreHelper } from '@src/lib';
 import { useActionHelper, useRoomGameHelper } from '@src/hooks';
-import { type RoomGame } from '@src/types';
 
 export const useGetRoomGame = () => {
 	const { room } = useRoomContext();
 	const saveScoreHelper = useActionHelper(SaveScoreHelper);
 	const roomGameHelper = useRoomGameHelper();
-	const [roomGame, setRoomGame] = useState<RoomGame>();
 
-	const { isLoading, isRefetching, isIdle, error, refetch } = useQuery(
+	const {
+		isLoading,
+		isRefetching,
+		isIdle,
+		data: roomGame,
+		error,
+		refetch,
+	} = useQuery(
 		['room-game'],
 		async () => {
 			return await roomGameHelper.getGame();
 		},
 		{
 			enabled: !!roomGameHelper,
-			onSuccess(data) {
-				setRoomGame(data);
-			},
 		}
 	);
 
@@ -35,30 +37,25 @@ export const useGetRoomGame = () => {
 		},
 	});
 
-	const isReadyForNextGame = useMemo(
-		() => roomGame?.scores?.find?.((score) => score.playerId === room?.player?.id) !== undefined,
-		[roomGame?.scores, room?.player?.id]
-	);
+	const isLastRound = room!.rounds - room!.roundsPlayed === 1;
 
 	useEffect(() => {
-		if (!roomGame || !room) {
+		if (!roomGame || !roomGameHelper) {
 			return;
-		}
-
-		if (roomGame.status === 2 && room.rounds !== room.roundsPlayed) {
-			refetch();
-			scoreMutation.reset();
 		}
 
 		const roomGameUpdateSubscription = roomGameHelper.getUpdateSubscription((payload) => {
 			const { status } = payload.new;
-			setRoomGame((prevRoomGame) => ({ ...prevRoomGame, status } as RoomGame));
+			if (status === 2 && !isLastRound) {
+				refetch();
+				scoreMutation.reset();
+			}
 		});
 
 		return () => {
 			roomGameUpdateSubscription.unsubscribe();
 		};
-	}, [roomGame]);
+	}, [roomGame, roomGameHelper]);
 
 	return {
 		isLoading,
@@ -66,9 +63,7 @@ export const useGetRoomGame = () => {
 		isIdle,
 		data: roomGame,
 		error: error,
-		handleScore: scoreMutation.mutate,
-		scoreError: scoreMutation.error,
-		isScoreLoading: scoreMutation.isLoading,
-		isReadyForNextGame: isReadyForNextGame || scoreMutation.isSuccess,
+		scoreMutation,
+		isLastRound,
 	};
 };

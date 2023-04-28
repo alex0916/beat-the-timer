@@ -31,7 +31,7 @@ export const RoomScores = () => {
 	};
 
 	if (isLoading || isIdle) {
-		return <Loading message="Loading Scores" />;
+		return <Loading message="Loading scores" />;
 	}
 
 	if (error) {
