@@ -32,7 +32,7 @@ export const BeatTimer = ({ flippedItems = 1, handleScore }: BeatTimerProps) => 
 		if (counter === 0) {
 			handleScore(selectedIndexes.length);
 		}
-	}, [flippedItems, selectedIndexes, counter]);
+	}, [flippedItems, flippedIndexes, selectedIndexes, counter, handleScore]);
 
 	const handleSelection = (selectedItem: number) => {
 		if (flippedIndexes.includes(selectedItem)) {

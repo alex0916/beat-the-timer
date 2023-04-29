@@ -1,29 +1,28 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 
 import { useRoomContext } from '@src/contexts';
 import { SaveScoreHelper } from '@src/lib';
 import { useActionHelper, useRoomGameHelper } from '@src/hooks';
+import { RoomGame, RoomGameStatus } from '@src/types';
 
 export const useGetRoomGame = () => {
 	const { room } = useRoomContext();
 	const saveScoreHelper = useActionHelper(SaveScoreHelper);
 	const roomGameHelper = useRoomGameHelper();
+	const [roomGame, setRoomGame] = useState<RoomGame>();
+	const [isLastRound, setIsLastRound] = useState(false);
 
-	const {
-		isLoading,
-		isRefetching,
-		isIdle,
-		data: roomGame,
-		error,
-		refetch,
-	} = useQuery(
+	const { isLoading, isRefetching, isIdle, error, refetch } = useQuery(
 		['room-game'],
 		async () => {
 			return await roomGameHelper.getGame();
 		},
 		{
 			enabled: !!roomGameHelper,
+			onSuccess(data) {
+				setRoomGame(data);
+			},
 		}
 	);
 
@@ -32,30 +31,32 @@ export const useGetRoomGame = () => {
 			return saveScoreHelper.saveScore({
 				score,
 				roomGameId: roomGame!.id,
-				playerId: room!.player!.id,
+				playerId: room.player!.id,
 			});
 		},
 	});
 
-	const isLastRound = room!.rounds - room!.roundsPlayed === 1;
-
 	useEffect(() => {
-		if (!roomGame || !roomGameHelper) {
+		if (!roomGameHelper) {
 			return;
 		}
 
 		const roomGameUpdateSubscription = roomGameHelper.getUpdateSubscription((payload) => {
 			const { status } = payload.new;
-			if (status === 2 && !isLastRound) {
-				refetch();
-				scoreMutation.reset();
-			}
+			setRoomGame((prev) => ({ ...prev, status } as RoomGame));
 		});
-
 		return () => {
 			roomGameUpdateSubscription.unsubscribe();
 		};
-	}, [roomGame, roomGameHelper]);
+	}, [roomGameHelper]);
+
+	useEffect(() => {
+		if (roomGame?.status === RoomGameStatus.FINISHED && !isLastRound) {
+			setIsLastRound(room.rounds - room.roundsPlayed === 1);
+			refetch();
+			scoreMutation.reset();
+		}
+	}, [room, roomGame, isLastRound, scoreMutation, refetch]);
 
 	return {
 		isLoading,

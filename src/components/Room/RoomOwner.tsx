@@ -16,7 +16,7 @@ export const RoomOwner = () => {
 
 	const { isLoading, mutate } = useMutation({
 		mutationFn: async () => {
-			return await startGameHelper.startGame({ roomId: room!.id });
+			return await startGameHelper.startGame({ roomId: room.id });
 		},
 	});
 

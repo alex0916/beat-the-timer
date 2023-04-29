@@ -19,7 +19,7 @@ export const JoinRoom = () => {
 
 	const { isLoading, mutate } = useMutation({
 		mutationFn: async (input: Inputs) => {
-			return await joinRoomHelper.joinRoom({ ...input, roomId: room!.id });
+			return await joinRoomHelper.joinRoom({ ...input, roomId: room.id });
 		},
 		onSuccess(data) {
 			router.push(`/room/${room?.id}/player/${data.playerId}`);

@@ -4,12 +4,10 @@ import { type RoomGame, UpdateSubscriptionPayload, RoomGameStatus } from '@src/t
 export class RoomGameHelper {
 	private supabase: SupabaseClient;
 	private roomId: string;
-	private roomGameId: string | null;
 
 	constructor(supabase: SupabaseClient, roomId: string) {
 		this.roomId = roomId;
 		this.supabase = supabase;
-		this.roomGameId = null;
 	}
 
 	static fromRoomId(supabase: SupabaseClient, roomId: string) {
@@ -19,16 +17,13 @@ export class RoomGameHelper {
 	async getGame() {
 		const { data } = await this.supabase
 			.from('room_games')
-			.select(
-				'id, status, flippedItems:flipped_items, scores:room_scores(id, playerId: player_id, score)'
-			)
+			.select('id, status, flippedItems:flipped_items')
 			.eq('status', RoomGameStatus.CREATED)
 			.eq('room_id', this.roomId)
 			.limit(1)
 			.single()
 			.throwOnError();
 
-		this.roomGameId = data?.id;
 		return data as RoomGame;
 	}
 
@@ -41,7 +36,7 @@ export class RoomGameHelper {
 					event: 'UPDATE',
 					schema: 'public',
 					table: 'room_games',
-					filter: `id=eq.${this.roomGameId}`,
+					filter: `room_id=eq.${this.roomId}`,
 				},
 				callback
 			)

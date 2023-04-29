@@ -39,9 +39,4 @@ export type RoomGame = {
 	id: string;
 	status: number;
 	flippedItems: number;
-	scores: {
-		id: string;
-		playerId: string;
-		score: number;
-	}[];
 };

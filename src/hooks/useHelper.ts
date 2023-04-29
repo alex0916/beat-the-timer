@@ -26,8 +26,8 @@ export const useRoomGameHelper = () => {
 	const [roomGame, setRoomGame] = useState<RoomGameHelper>();
 
 	useEffect(() => {
-		setRoomGame(RoomGameHelper.fromRoomId(supabase, room!.id));
-	}, [room!.id, supabase]);
+		setRoomGame(RoomGameHelper.fromRoomId(supabase, room.id));
+	}, [room.id, supabase]);
 
 	return roomGame as RoomGameHelper;
 };
@@ -38,8 +38,8 @@ export const useRoomPlayersHelper = () => {
 	const [roomPlayers, setRoomPlayers] = useState<RoomPlayersHelper>();
 
 	useEffect(() => {
-		setRoomPlayers(RoomPlayersHelper.fromRoomId(supabase, room!.id));
-	}, [room!.id, supabase]);
+		setRoomPlayers(RoomPlayersHelper.fromRoomId(supabase, room.id));
+	}, [room.id, supabase]);
 
 	return roomPlayers as RoomPlayersHelper;
 };
@@ -50,8 +50,8 @@ export const useScoresHelper = () => {
 	const [scores, setScores] = useState<ScoresHelper>();
 
 	useEffect(() => {
-		setScores(ScoresHelper.fromRoomId(supabase, room!.id));
-	}, [room, supabase]);
+		setScores(ScoresHelper.fromRoomId(supabase, room.id));
+	}, [room.id, supabase]);
 
 	return scores as ScoresHelper;
 };
@@ -62,7 +62,7 @@ export const useActionHelper = <T>(Helper: new (supabase: SupabaseClient) => T) 
 
 	useEffect(() => {
 		setActionHelper(new Helper(supabase));
-	}, [supabase]);
+	}, [Helper, supabase]);
 
 	return actionHelper as T;
 };
