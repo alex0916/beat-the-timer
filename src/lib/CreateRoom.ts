@@ -1,6 +1,6 @@
-import { getRandomNumber } from '@src/utils';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { StartGameHelper } from './StartGame';
+import { getRandomNumber } from '@src/utils';
+import { StartGameHelper } from '@src/lib';
 
 type CreateRoomInput = {
 	gameRounds: number;

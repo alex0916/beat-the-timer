@@ -1,12 +1,5 @@
-import { Layout } from '@src/components/Layout';
-import { RoomHandler, RoomScores } from '@src/components/Room';
+import { RoomScores } from '@src/components';
 
 export default function RoomScoresPage() {
-	return (
-		<Layout>
-			<RoomHandler>
-				<RoomScores />
-			</RoomHandler>
-		</Layout>
-	);
+	return <RoomScores />;
 }

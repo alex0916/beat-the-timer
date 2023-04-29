@@ -1,12 +1,5 @@
-import { Layout } from '@src/components/Layout';
-import { RoomHandler, Room } from '@src/components/Room';
+import { Room } from '@src/components';
 
 export default function RoomPage() {
-	return (
-		<Layout>
-			<RoomHandler>
-				<Room />
-			</RoomHandler>
-		</Layout>
-	);
+	return <Room />;
 }

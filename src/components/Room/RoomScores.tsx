@@ -5,8 +5,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
 import { useScoresHelper } from '@src/hooks';
-import { Loading } from '@src/components/Loading';
-import { Error } from '@src/components/Error';
+import { Error, Loading } from '@src/components';
 
 export const RoomScores = () => {
 	const router = useRouter();

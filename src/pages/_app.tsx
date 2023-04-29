@@ -13,6 +13,7 @@ import 'primeicons/primeicons.css';
 import '/node_modules/primeflex/primeflex.css';
 
 import { RoomContextProvider } from '@src/contexts';
+import { Layout, RoomHandler } from '@src/components';
 
 export default function App({ Component, pageProps }: AppProps) {
 	const [supabaseClient] = useState(() => createBrowserSupabaseClient());
@@ -25,7 +26,11 @@ export default function App({ Component, pageProps }: AppProps) {
 		>
 			<QueryClientProvider client={queryClient}>
 				<RoomContextProvider>
-					<Component {...pageProps} />
+					<Layout>
+						<RoomHandler>
+							<Component {...pageProps} />
+						</RoomHandler>
+					</Layout>
 				</RoomContextProvider>
 			</QueryClientProvider>
 		</SessionContextProvider>

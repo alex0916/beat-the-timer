@@ -1,7 +1,5 @@
 import { useGetRoomGame } from '@src/hooks';
-import { Loading } from '@src/components/Loading';
-import { BeatTimer } from '@src/components/Games';
-import { Error } from '@src/components/Error';
+import { BeatTimer, Error, Loading } from '@src/components';
 
 export const RoomGame = () => {
 	const {

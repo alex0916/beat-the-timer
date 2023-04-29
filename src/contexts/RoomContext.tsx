@@ -16,7 +16,6 @@ export type RoomContextState = {
 	room: Room;
 	error: unknown;
 	isLoading: boolean;
-	isIdle: boolean;
 };
 
 const RoomContext = createContext<RoomContextState>({} as RoomContextState);
@@ -49,7 +48,7 @@ export const RoomContextProvider = ({ children }: PropsWithChildren) => {
 		[query, router]
 	);
 
-	const { isLoading, isIdle, error } = useQuery(
+	const { isLoading, error } = useQuery(
 		['room', roomHelper?.query],
 		async () => {
 			return await roomHelper.getRoom();
@@ -78,7 +77,7 @@ export const RoomContextProvider = ({ children }: PropsWithChildren) => {
 	}, [roomHelper, handleSetRoom]);
 
 	return (
-		<RoomContext.Provider value={{ room: room as Room, error, isLoading, isIdle }}>
+		<RoomContext.Provider value={{ room: room as Room, error, isLoading }}>
 			{children}
 		</RoomContext.Provider>
 	);

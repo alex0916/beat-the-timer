@@ -1,7 +1,7 @@
 import { Chip } from 'primereact/chip';
 
 import { useGetRoomPlayers } from '@src/hooks';
-import { Error } from '@src/components/Error';
+import { Error } from '@src/components';
 
 export const RoomGuest = () => {
 	const { data: players, isLoading, error } = useGetRoomPlayers();

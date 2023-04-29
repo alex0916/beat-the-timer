@@ -1,5 +1,5 @@
-import { RoomGameStatus, RoomStatus } from '@src/types';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { RoomGameStatus, RoomStatus } from '@src/types';
 
 type SaveScoreInput = {
 	roomGameId: string;

@@ -1,12 +1,5 @@
-import { Layout } from '@src/components/Layout';
-import { RoomGame, RoomHandler } from '@src/components/Room';
+import { RoomGame } from '@src/components';
 
 export default function RoomGamePage() {
-	return (
-		<Layout>
-			<RoomHandler>
-				<RoomGame />
-			</RoomHandler>
-		</Layout>
-	);
+	return <RoomGame />;
 }

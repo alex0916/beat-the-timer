@@ -5,7 +5,7 @@ import { Divider } from 'primereact/divider';
 import { useRoomContext } from '@src/contexts';
 import { useCounter } from '@src/hooks';
 
-const GRID_SIZE = 24;
+const GRID_SIZE = 36;
 
 type BeatTimerProps = {
 	flippedItems: number | undefined;

@@ -1,5 +1,5 @@
 import { useRoomContext } from '@src/contexts';
-import { RoomOwner, RoomGuest } from '@src/components/Room';
+import { RoomOwner, RoomGuest } from '@src/components';
 
 export const Room = () => {
 	const { room } = useRoomContext();

@@ -1,12 +1,5 @@
-import { Layout } from '@src/components/Layout';
-import { JoinRoom, RoomHandler } from '@src/components/Room';
+import { JoinRoom } from '@src/components';
 
 export default function JoinRoomPage() {
-	return (
-		<Layout>
-			<RoomHandler>
-				<JoinRoom />
-			</RoomHandler>
-		</Layout>
-	);
+	return <JoinRoom />;
 }

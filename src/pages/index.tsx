@@ -1,15 +1,5 @@
-import { Layout } from '@src/components/Layout';
-import { CreateRoom } from '@src/components/Room';
+import { CreateRoom } from '@src/components';
 
 export default function HomePage() {
-	return (
-		<Layout>
-			<CreateRoom />
-		</Layout>
-	);
+	return <CreateRoom />;
 }
-
-// @TODO use server auth
-// export const getServerSideProps = withAuth(async () => {
-// 	return { props: {} };
-// });
