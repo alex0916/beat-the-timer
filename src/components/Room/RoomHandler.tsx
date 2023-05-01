@@ -6,9 +6,9 @@ import { Error } from '@src/components/Error';
 import { useRouter } from 'next/router';
 
 export const RoomHandler = ({ children }: PropsWithChildren) => {
-	const { query } = useRouter();
+	const router = useRouter();
 	const { isLoading, error, room } = useRoomContext();
-	const shouldWaitForRoom = !!query.roomId && !room;
+	const shouldWaitForRoom = router.pathname.includes('roomId') && !room;
 
 	if (error) {
 		return <Error />;

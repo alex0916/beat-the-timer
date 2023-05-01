@@ -46,18 +46,21 @@ export const BeatTimer = ({ flippedItems = 1, handleScore }: BeatTimerProps) => 
 				<p className="font-bold text-xl">👤 {room?.player?.name}</p>
 				<p className="font-bold text-xl">{counter} ⏳</p>
 			</div>
-			<Divider className="mt-1" />
+			<Divider className="my-1" />
+			<small className=" col-12 flex justify-content-center font-bold">
+				Find the flipped icons 🔭
+			</small>
 			<div className="grid">
-				{[...Array(GRID_SIZE).keys()].map((_value, idx) => (
-					<div className="col-2" key={`item-${idx}`}>
+				{[...Array(GRID_SIZE).keys()].map((key) => (
+					<div className="col-2" key={`item-${key}`}>
 						<Button
 							text
 							rounded
 							className={`w-full flex justify-content-center text-2xl ${
-								flippedIndexes.includes(idx) ? 'rotate-180' : ''
-							} ${selectedIndexes.includes(idx) ? 'bg-green-500' : ''}`}
+								flippedIndexes.includes(key) ? 'rotate-180' : ''
+							} ${selectedIndexes.includes(key) ? 'bg-green-500' : ''}`}
 							size="large"
-							onClick={() => handleSelection(idx)}
+							onClick={() => handleSelection(key)}
 						>
 							😂
 						</Button>

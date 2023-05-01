@@ -50,7 +50,9 @@ export const CreateRoom = () => {
 	return (
 		<form className="grid" onSubmit={handleSubmit((input) => mutate(input))}>
 			<div className="flex-1 flex-wrap flex-column">
-				<h1 className="pb-4 text-center">Create a room and start playing 🎉</h1>
+				<h1 className="pb-4 text-center">
+					{isMultiplayer ? 'Create a room and start playing 🎉' : 'Start playing 🎉'}
+				</h1>
 				<div className="grid">
 					<Controller
 						name="ownerName"
