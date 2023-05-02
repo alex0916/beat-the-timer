@@ -11,10 +11,10 @@ type RoomGame = {
 	id: string;
 	room: {
 		id: string;
-		participants: number;
-		rounds: number;
-		roundsPlayed: number;
 	};
+	scores: {
+		playerId: string;
+	}[];
 };
 
 export class SaveScoreHelper {
@@ -29,16 +29,23 @@ export class SaveScoreHelper {
 	private async getRoomGame() {
 		const { data } = await this.supabase
 			.from('room_games')
-			.select('id, room:rooms ( id, participants, rounds, roundsPlayed:rounds_played )')
+			.select('id, room:rooms ( id ), scores:room_scores(  playerId: player_id )')
 			.eq('status', RoomGameStatus.CREATED)
 			.eq('id', this.input.roomGameId)
 			.single()
 			.throwOnError();
-
 		this.roomGame = data as RoomGame;
 	}
 
+	private validateNewScore() {
+		if (this.roomGame.scores.findIndex(({ playerId }) => playerId === this.input.playerId) !== -1) {
+			throw Error('Already played');
+		}
+	}
+
 	private async addScore() {
+		this.validateNewScore();
+
 		await this.supabase
 			.from('room_scores')
 			.insert({
@@ -52,43 +59,9 @@ export class SaveScoreHelper {
 			.throwOnError();
 	}
 
-	private async updateRoundsPlayed() {
-		const roundsPlayed = this.roomGame.room.roundsPlayed + 1;
-
-		await this.supabase
-			.from('rooms')
-			.update({
-				rounds_played: roundsPlayed,
-				...(roundsPlayed === this.roomGame.room.rounds && { status: RoomStatus.FINISHED }),
-			})
-			.eq('id', this.roomGame.room.id)
-			.throwOnError();
-	}
-
-	private async updateRoomGameStatus() {
-		await this.supabase
-			.from('room_games')
-			.update({ status: RoomGameStatus.FINISHED })
-			.eq('id', this.input.roomGameId)
-			.throwOnError();
-	}
-
-	private async checkRoomGameUpdate() {
-		const { data: scores } = await this.supabase
-			.from('room_scores')
-			.select()
-			.eq('room_game_id', this.roomGame.id)
-			.throwOnError();
-
-		if (this.roomGame.room.participants === scores?.length) {
-			await Promise.all([this.updateRoundsPlayed(), this.updateRoomGameStatus()]);
-		}
-	}
-
 	async saveScore(input: SaveScoreInput) {
 		this.input = input;
 		await this.getRoomGame();
 		await this.addScore();
-		await this.checkRoomGameUpdate();
 	}
 }
