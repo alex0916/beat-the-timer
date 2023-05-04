@@ -11,7 +11,6 @@ export const useGetRoomGame = () => {
 	const saveScoreHelper = useActionHelper(SaveScoreHelper);
 	const roomGameHelper = useRoomGameHelper();
 	const [roomGame, setRoomGame] = useState<RoomGame>();
-	const [isLastRound, setIsLastRound] = useState(false);
 
 	const { isLoading, isRefetching, isIdle, error, refetch } = useQuery(
 		['room-game'],
@@ -51,12 +50,11 @@ export const useGetRoomGame = () => {
 	}, [roomGameHelper]);
 
 	useEffect(() => {
-		if (roomGame?.status === RoomGameStatus.FINISHED && !isLastRound) {
-			setIsLastRound(room.rounds - room.roundsPlayed === 1);
+		if (roomGame?.status === RoomGameStatus.FINISHED && !roomGame.isLastGame) {
 			refetch();
 			scoreMutation.reset();
 		}
-	}, [room, roomGame, isLastRound, scoreMutation, refetch]);
+	}, [roomGame]);
 
 	return {
 		isLoading,
@@ -65,6 +63,5 @@ export const useGetRoomGame = () => {
 		data: roomGame,
 		error: error,
 		scoreMutation,
-		isLastRound,
 	};
 };

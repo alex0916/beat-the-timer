@@ -21,16 +21,14 @@ export class RoomHelper {
 		if (!playerId) {
 			return this.supabase
 				.from('rooms')
-				.select('id, name, status, rounds, roundsPlayed: rounds_played')
+				.select('id, name, status, rounds')
 				.eq('id', roomId)
 				.single();
 		}
 
 		return this.supabase
 			.from('room_players')
-			.select(
-				'id, name: player_name, isOwner:is_owner, room:rooms(id, name, status, rounds, roundsPlayed: rounds_played)'
-			)
+			.select('id, name: player_name, isOwner:is_owner, room:rooms(id, name, status, rounds)')
 			.eq('rooms.id', roomId)
 			.eq('id', playerId)
 			.single();

@@ -22,7 +22,6 @@ export type Room = {
 	name: string;
 	status: number;
 	rounds: number;
-	roundsPlayed: number;
 	player?: {
 		id: string;
 		name: string;
@@ -39,4 +38,5 @@ export type RoomGame = {
 	id: string;
 	status: number;
 	flippedItems: number;
+	isLastGame: boolean;
 };

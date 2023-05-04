@@ -20,11 +20,14 @@ export class RoomGameHelper {
 			.select('id, status, flippedItems:flipped_items')
 			.eq('status', RoomGameStatus.CREATED)
 			.eq('room_id', this.roomId)
-			.limit(1)
-			.single()
 			.throwOnError();
 
-		return data as RoomGame;
+		const game = data?.pop();
+
+		return {
+			...game,
+			isLastGame: data?.length === 0,
+		} as RoomGame;
 	}
 
 	getUpdateSubscription(callback: (payload: UpdateSubscriptionPayload) => void) {

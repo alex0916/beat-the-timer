@@ -9,7 +9,6 @@ import { Error, Loading } from '@src/components';
 
 export const RoomScores = () => {
 	const router = useRouter();
-
 	const scoresHelper = useScoresHelper();
 
 	const {

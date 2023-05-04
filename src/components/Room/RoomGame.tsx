@@ -9,7 +9,6 @@ export const RoomGame = () => {
 		isRefetching,
 		data: roomGame,
 		scoreMutation,
-		isLastRound,
 	} = useGetRoomGame();
 
 	if (error || scoreMutation.error) {
@@ -25,7 +24,7 @@ export const RoomGame = () => {
 	}
 
 	if (scoreMutation.isSuccess) {
-		const messsage = `Score saved, wait for the ${isLastRound ? 'results' : 'next game'}`;
+		const messsage = `Score saved, wait for the ${roomGame?.isLastGame ? 'results' : 'next game'}`;
 		return <Loading message={messsage} />;
 	}
 

@@ -67,8 +67,8 @@ export const RoomContextProvider = ({ children }: PropsWithChildren) => {
 		}
 
 		const roomUpdateSubscription = roomHelper.getUpdateSubscription((payload) => {
-			const { rounds, rounds_played: roundsPlayed, status } = payload.new;
-			handleSetRoom({ rounds, roundsPlayed, status });
+			const { status } = payload.new;
+			handleSetRoom({ status });
 		});
 
 		return () => {
