@@ -5,9 +5,9 @@ import { Chip } from 'primereact/chip';
 import { useRoomContext } from '@src/contexts';
 import { StartGameHelper } from '@src/lib';
 import { useActionHelper, useGetRoomPlayers } from '@src/hooks';
-import { ShareMenu } from '@src/components';
+import ShareMenu from '@src/components/ShareMenu';
 
-export const RoomOwner = () => {
+export default function RoomOwner() {
 	const { room } = useRoomContext();
 	const players = useGetRoomPlayers();
 	const startGameHelper = useActionHelper(StartGameHelper);
@@ -54,4 +54,4 @@ export const RoomOwner = () => {
 			</div>
 		</div>
 	);
-};
+}

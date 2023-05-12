@@ -19,7 +19,7 @@ const getFlippedIndexes = (flippedItems: number) =>
 		.map(({ value }) => value)
 		.slice(0, flippedItems);
 
-export const BeatTimer = ({ flippedItems = 1, handleScore }: BeatTimerProps) => {
+export default function BeatTimer({ flippedItems = 1, handleScore }: BeatTimerProps) {
 	const { room } = useRoomContext();
 	const counter = useCounter(3);
 	const [flippedIndexes, setFlippedIndexes] = useState<number[]>([]);
@@ -69,4 +69,4 @@ export const BeatTimer = ({ flippedItems = 1, handleScore }: BeatTimerProps) => 
 			</div>
 		</div>
 	);
-};
+}

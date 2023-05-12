@@ -1,9 +1,9 @@
 import { Chip } from 'primereact/chip';
 
 import { useGetRoomPlayers } from '@src/hooks';
-import { Error } from '@src/components';
+import Error from '@src/components/Error';
 
-export const RoomGuest = () => {
+export default function RoomGuest() {
 	const { data: players, isLoading, error } = useGetRoomPlayers();
 
 	if (error) {
@@ -31,4 +31,4 @@ export const RoomGuest = () => {
 			)}
 		</div>
 	);
-};
+}

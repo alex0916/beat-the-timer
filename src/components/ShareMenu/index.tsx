@@ -8,7 +8,7 @@ import { Dialog } from 'primereact/dialog';
 
 import { useRoomContext } from '@src/contexts';
 
-export const ShareMenu = () => {
+export default function ShareMenu() {
 	const { room } = useRoomContext();
 	const menu = useRef<Menu>(null);
 	const toast = useRef<Toast>(null);
@@ -55,4 +55,4 @@ export const ShareMenu = () => {
 			/>
 		</>
 	);
-};
+}

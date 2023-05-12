@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { useWindowSize } from '@src/hooks';
 
-export const Layout = ({ children }: PropsWithChildren) => {
+export default function Layout({ children }: PropsWithChildren) {
 	const { height } = useWindowSize();
 
 	if (!height) {
@@ -13,4 +13,4 @@ export const Layout = ({ children }: PropsWithChildren) => {
 			<div className="col-10 col-offset-1 lg:col-4 lg:col-offset-4">{children}</div>
 		</div>
 	);
-};
+}

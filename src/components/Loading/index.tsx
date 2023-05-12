@@ -1,6 +1,6 @@
 import styles from './Loading.module.css';
 
-export const Loading = ({ message }: { message?: string }) => {
+export default function Loading({ message }: { message?: string }) {
 	return (
 		<div className="flex flex-column align-items-center">
 			{message ? <p className="font-bold mb-5">{message}</p> : null}
@@ -11,4 +11,4 @@ export const Loading = ({ message }: { message?: string }) => {
 			</div>
 		</div>
 	);
-};
+}
